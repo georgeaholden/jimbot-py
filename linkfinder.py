@@ -36,3 +36,4 @@ def linkfinder(query):
     for phrase in CODE:
         if phrase in query:
             return 'My Source Code is publicly available at: https://github.com/georgeaholden/jimBot'
+    return "I'm not quite sure what you mean...\nMaybe look at $link help?"
