@@ -20,8 +20,9 @@ HELP_TEXT = """I'm a WIP
 Current Commands: 
 $help - Shows this text
 $flix - Adds to Blackmore's Gibbonflix request doc
+$link - Ill link anything I know about (type $link help for info)
 $hello - Please stop
-$link - Ill link anything I know about (type $link help for info)"""
+$source - Where did I come from?"""
 
 
 # Getting Environment Variables
@@ -74,6 +75,10 @@ async def on_message(message):
 
     if message.content.startswith('$link'):
         link = linkfinder(message.content.lstrip('$flix '))
+        await message.channel.send(link)
+
+    if message.content.startswith('$source'):
+        link = linkfinder('source')
         await message.channel.send(link)
 
     # if message.content for new commands
