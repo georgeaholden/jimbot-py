@@ -1,12 +1,23 @@
+""" Super basic module I wrote in like 10 mins to link various URLs to a user
+The way that queries are matched to the appropriate URL is super ugly, I wonder if there's a package I could use instead?
+Currently just checks if any commonly used phrases are contained in the input.
+"""
+
 SHOP = ['shop', 'store', 'things']
 MC = ['mine', 'craft', 'mc']
+CODE = ['source', 'code', 'git']
+
 HELP = """I currently know about:
 slimjimsthings.com
 The jims movie sheet
 The jimDev Doc
 The jims game sheet
-The MC Server Address"""
+The MC Server Address
+My Source Code"""
+
+
 def linkfinder(query):
+    """Finds and returns str links based on str query"""
     query = query.strip().lower()
     if 'help' in query:
         return HELP
@@ -22,3 +33,6 @@ def linkfinder(query):
     for phrase in MC:
         if phrase in query:
             return 'The Current MC Server is Running on: 34.71.253.85'
+    for phrase in CODE:
+        if phrase in query:
+            return 'My Source Code is publicly available at: https://github.com/georgeaholden/jimBot'

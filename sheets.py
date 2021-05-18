@@ -12,12 +12,8 @@ from google.oauth2.credentials import Credentials
 load_dotenv()
 SPREADSHEET_ID = os.getenv('SHEETID_REQUESTS')
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
-# The ID and range of a sample spreadsheet.
-SAMPLE_RANGE_NAME = 'Requests!A1:E'
-DB_SHEET = "I'm a Fucking DB lol!"
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']  # Allows reading and writing
+DB_SHEET = "I'm a Fucking DB lol!"  # Name of Sheet I'm using for persistence to avoid paying for a DB
 
 
 def get_creds():
@@ -44,6 +40,8 @@ def get_creds():
 
 
 def connect_to_sheet(creds):
+    """Takes the credentials returned by get_creds and connects to Blackmore's Req sheet. Returns sheet, which isn't
+    exactly a sheet object but is close enough for me to ignore :)"""
     service = build('sheets', 'v4', credentials=creds)
 
     # Call the Sheets API
@@ -51,31 +49,9 @@ def connect_to_sheet(creds):
     return sheet
 
 
-def read_test(sheet):
-    range_name = SAMPLE_RANGE_NAME
-    result = sheet.values().get(
-        spreadsheetId=SPREADSHEET_ID, range=range_name).execute()
-    rows = result.get('values', [])
-    print('{0} rows retrieved.'.format(len(rows)))
-    print(rows)
-
-
-def write_test(sheet):
-    range_name = 'Requests!A2:C2'
-    values = [
-        ['Test Movie', '10:20', 'No']
-        # Additional rows ...
-    ]
-    body = {
-        'values': values
-    }
-    result = sheet.values().update(
-        spreadsheetId=SPREADSHEET_ID, range=range_name,
-        valueInputOption='RAW', body=body).execute()
-    print('{0} cells updated.'.format(result.get('updatedCells')))
-
-
 def get_counter(sheet):
+    """A counter of how many request rows currently exist is stored in the DB sheet in cell A1. This function gets that
+    value from the given sheet"""
     range_name = DB_SHEET + 'A1'
     result = sheet.values().get(
         spreadsheetId=SPREADSHEET_ID, range=range_name).execute()
@@ -84,6 +60,8 @@ def get_counter(sheet):
 
 
 def add_to_counter(sheet, counter, amount=1):
+    """A counter of how many request rows currently exist is stored in the DB sheet in cell A1. This function increments
+    that counter by amount (default 1)"""
     range_name = DB_SHEET + 'A1'
     values = [
         [counter + amount]
@@ -97,6 +75,8 @@ def add_to_counter(sheet, counter, amount=1):
 
 
 def add_request(sheet, title, author):
+    """Takes a sheet object, to which this funtion will add a new row containing the input title, current date and user
+    who used the bot command"""
     counter = get_counter(sheet)
     range_name = 'Requests!A{0}:D{0}'
     now = datetime.now()
@@ -115,9 +95,7 @@ def add_request(sheet, title, author):
 
 
 def main():
-    """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
-    """
+    """No longer useful beyond testing, but I'll keep for now just in case"""
     creds = get_creds()
     sheet = connect_to_sheet(creds)
 
