@@ -63,23 +63,32 @@ async def on_message(message):
 
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
+        return
 
     if message.content.startswith('$flix'):
         title = message.content.lstrip('$flix ')
         await message.channel.send('Attempted to add {} to GibbonFlix Requests Doc'.format(title))
         if sheets.add_request(sheet, title, str(message.author)):
             await message.channel.send('Successfully added to the list of requests :)')
+        return
 
     if message.content.startswith('$help'):
         await message.channel.send(HELP_TEXT)
+        return
 
     if message.content.startswith('$link'):
         link = linkfinder(message.content.lstrip('$flix '))
         await message.channel.send(link)
+        return
 
     if message.content.startswith('$source'):
         link = linkfinder('source')
         await message.channel.send(link)
+        return
+
+    if message.content.startswith('$'):
+        await message.channel.send('Is that meant to be a command??\nMaybe check $help')
+        return
 
     # if message.content for new commands
 
