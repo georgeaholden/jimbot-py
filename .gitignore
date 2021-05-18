@@ -1,0 +1,10 @@
+__pycache__
+.idea
+venv
+.env
+
+
+### Jsons I need ###
+client_secret.json
+credentials.json
+token.json
