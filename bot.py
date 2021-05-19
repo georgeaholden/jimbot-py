@@ -15,17 +15,17 @@ from dotenv import load_dotenv
 # Imports for the modules I wrote
 import sheets
 from linkfinder import linkfinder
+import harassment
+import gifs
 
-HELP_TEXT = """I'm a WIP
-Current Commands: 
-$help - Shows this text
-$flix - Adds to Blackmore's Gibbonflix request doc
-$link - I'll link anything I know about (type $link help for info)
-$status - I'll go check if the MC server is up for you
-$hello - Please stop
-$source - Where did I come from?
-Feel free to dm me commands too"""
-
+infile = open('txts/commands.txt')
+lines = infile.readlines()
+GIF_PROMPT = lines[0].strip()
+HELP_TEXT = ''
+for line in lines[1:]:
+    HELP_TEXT += line
+HELP_TEXT = HELP_TEXT.strip()
+infile.close()
 
 # Getting Environment Variables
 load_dotenv()
@@ -41,8 +41,10 @@ client = discord.Client()
 @client.event
 async def on_ready():
     print('{} has connected to Discord!'.format(client.user))
-    for guild in client.guilds:
-        if guild.name == GUILD:
+    global guild
+    for gild in client.guilds:
+        if gild.name == GUILD:
+            guild = gild
             break
 
     print('{} is connected to the following guild:\n'.format(client.user))
@@ -64,7 +66,7 @@ async def on_message(message):
         return
 
     if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+        await harassment.say_hello(message)
         return
 
     if message.content.startswith('$flix'):
@@ -90,6 +92,10 @@ async def on_message(message):
 
     if message.content.startswith('$status'):
         await message.channel.send("I can't really tell, but the MC Server should be up and working\nIf not please dm Jog")
+        return
+
+    if message.content.startswith(GIF_PROMPT):
+        await gifs.post_gif(message.channel, guild)
         return
 
     if message.content.startswith('$'):

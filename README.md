@@ -15,8 +15,10 @@ TODO:
    deleting old entries 
    and sending requests to OMDB API to verify input
  - Improve Security a touch, maybe add links to .env
- - Deploy on Google Cloud Platform
+ - Deploy on Google Cloud Platform - Done
  - Implement MC Server Commands (Rollback? Reset? etc)
+ - Add $buge, tts cone time, link oscar gif
+ - Implement periodic $buging on 420
 
 
 ### -- George Holden 
