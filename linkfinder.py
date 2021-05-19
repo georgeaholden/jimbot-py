@@ -12,7 +12,7 @@ slimjimsthings.com
 The jims movie sheet
 The jimDev Doc
 The jims game sheet
-The MC Server Address
+The MC Server IP Address
 My Source Code"""
 
 
@@ -32,7 +32,7 @@ def linkfinder(query):
         return "https://docs.google.com/spreadsheets/d/12ILuG2T99PL1-gjGyGUCf1GMb7N-uvG66wf5OGYv4mM/edit?usp=sharing"
     for phrase in MC:
         if phrase in query:
-            return 'The Current MC Server is Running on: 34.71.253.85'
+            return 'The Current MC Server is Running on a NEW IP Address: 34.151.89.121'
     for phrase in CODE:
         if phrase in query:
             return 'My Source Code is publicly available at: https://github.com/georgeaholden/jimBot'
