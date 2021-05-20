@@ -9,6 +9,7 @@ Last Edited: 18/5/2021
 # Discord and general imports
 import os
 import discord
+import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -34,6 +35,13 @@ class Bot:
 
         creds = sheets.get_creds()
         self.sheet = sheets.connect_to_sheet(creds)
+        self.timers = self.setup_timers()
+
+
+    def setup_timers(self):
+        result = {}
+        result['gif'] = datetime.datetime.now() - datetime.timedelta(hours=3)
+        return result
 
     # On Startup Basically
     async def on_ready(self):
@@ -85,19 +93,23 @@ class Bot:
             return
 
         if message.content.lower().startswith(self.GIF_PROMPT):
-            await gifs.post_gif(message.channel, self.guild)
+            if (datetime.datetime.now() - self.timers['gif']) > datetime.timedelta(hours=3):
+                await gifs.post_gif(message.channel, self.guild, self.response_dict['PHRASES'], self.response_dict['GIFS'])
+            else:
+                await gifs.reject_gif_request(message.channel, self.response_dict['GIFS_UNREADY'])
             return
 
         if message.content.lower().startswith('$'):
             await message.channel.send('Is that meant to be a command??\nMaybe check $help')
             return
 
-        for thank in ['ty', 'thank', 'arigato', 'gracias', 'cheers', 'chur']:
+        for thank in ['ty', 'thank', 'arigatou', 'gracias', 'cheers', 'chur', 'merci', 'onya', 'grazie', 'ta', 'shot']:
             if thank in message.content.lower():
                 for botname in ['bot', 'jim']:
                     if botname in message.content.lower():
                         await message.channel.last_message.add_reaction('❤️')
-                        await message.channel.send("You're welcome")
+                        await message.channel.send("You're welcome bud")
+                        return
 
         # if message.content for new commands
 

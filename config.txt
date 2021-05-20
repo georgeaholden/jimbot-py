@@ -1,3 +1,4 @@
 HELLO_RESPONSES-txts/responses.txt
 GIFS-txts/gifs.txt
 GIFS_UNREADY-txts/unready.txt
+PHRASES-txts/phrases.txt

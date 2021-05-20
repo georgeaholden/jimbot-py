@@ -1,8 +1,8 @@
-def create_list(filename):
+def create_list(filename, start=0):
     infile = open(filename)
     target = []
     lines = infile.readlines()
-    for line in lines:
+    for line in lines[start:]:
         target.append(line.strip())
     infile.close()
     return target
