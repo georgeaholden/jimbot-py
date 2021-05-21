@@ -1,16 +1,21 @@
+"""Contains functions that handle the manipulation of files"""
+
+
 def create_list(filename, start=0):
+    """Returns a list of all the lines in a given file with trailing whitespace removed. Optional start index"""
     infile = open(filename)
-    target = []
+    result = []
     lines = infile.readlines()
     for line in lines[start:]:
         if line.startswith('#'):
             continue
-        target.append(line.strip())
+        result.append(line.strip())
     infile.close()
-    return target
+    return result
 
 
 def read_commands():
+    """Reads the super ugly command txt, which contains the gif prompt in it's first line and help_text"""
     infile = open('config_txts/commands.txt')
     lines = infile.readlines()
     gif_prompt = lines[0].strip()
@@ -22,6 +27,8 @@ def read_commands():
 
 
 def read_config(dictionary):
+    """Extracts data from config.txt. Currently updates the given dictionary in place, and returns a string containing
+    the version number, which is super gross. Eventually version should be stored elsewhere"""
     infile = open('config.txt')
     lines = infile.readlines()
     for line in lines[1:]:
@@ -34,8 +41,10 @@ def read_config(dictionary):
 
 
 def get_contents(filename):
+    """Returns the entire contents of a given file as a string, with trailing whitespace removed"""
     infile = open(filename)
     result = infile.read()
+    infile.close()
     return result.strip()
 
 

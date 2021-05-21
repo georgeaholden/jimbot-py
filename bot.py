@@ -9,7 +9,6 @@ Last Edited: 21/5/2021
 # Discord and general imports
 import os
 import discord
-import datetime
 from dotenv import load_dotenv
 
 # Imports for the modules I wrote
@@ -18,16 +17,17 @@ from modules import filehandling, gifs, harassment, sheets, timercontroller, lin
 
 class Bot:
 
-    def __init__(self, token, guild, version):
-
+    def __init__(self, token, guild):
         # Discord Related setup
         self.token = token
         self.guild = guild
         self.client = discord.Client()
+        self.general = None
+
+        # Binds class methods to events (Could maybe be done with iteration?)
         self.client.event(self.on_ready)
         self.client.event(self.on_message)
         self.client.event(self.on_raw_reaction_add)
-        self.general = None
 
         # Setup for modules I wrote
         self.strings_dict = {}
@@ -40,7 +40,7 @@ class Bot:
         creds = sheets.get_creds()
         self.sheet = sheets.connect_to_sheet(creds)
 
-    # On Startup Basically
+    # On Connection to the Discord server
     async def on_ready(self):
         print('{} has connected to Discord!'.format(self.client.user))
         found = False
@@ -50,7 +50,7 @@ class Bot:
                 found = True
                 break
         if not found:
-            raise ValueError
+            raise RuntimeError
         print('Connected to {}(id: {})\n'.format(guild.name, guild.id))
         print(self.guild.name)
         self.general = self.guild.get_channel(int(os.getenv('GENERAL')))
@@ -113,6 +113,7 @@ class Bot:
                         return
         # if message.content for new commands
 
+    # Triggers whenever a message is reacted to
     async def on_raw_reaction_add(self, payload):
         channel = self.guild.get_channel(payload.channel_id)
         message = await channel.fetch_message(payload.message_id)
@@ -121,7 +122,7 @@ class Bot:
             if reaction == payload.emoji:
                 break
 
-        if reaction.count > 2:
+        if reaction.count > 2:  # Should be set in config or something
             await message.add_reaction(reaction)
 
     async def post_changelog(self):
@@ -132,8 +133,7 @@ def main():
     load_dotenv()
     token = os.getenv('DISCORD_TOKEN')
     guild = os.getenv('DISCORD_GUILD')
-    version = os.getenv('VERSION')
-    bot = Bot(token, guild, version)
+    bot = Bot(token, guild)
     bot.client.run(token)
 
 

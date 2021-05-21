@@ -1,5 +1,5 @@
 # jimBot
-### 0.1.1
+### 0.1.2
 Source Code for jimBot, a Python based discord bot
 
 Simple desktop application, currently deployed to a virtual machine on the Google
@@ -11,10 +11,11 @@ Current Functionality:
  - Updates Blackmore's Google Request Sheet based on user input using Sheets API
  - Posts randomised gifs with a randomised phrase, given a cooldown timer.
  - Supports thanking
+ - Joins in on reacting to a message with emojis, given enough responses
 
 TODO:
- - Implement "bandwagoning", where the bot adds a reaction if enough people
- react to a given message
+ - Refactor hard coded elements out of modules and into .env or similar.
+ - Find a better way to handle the version variable
  - Further improve on Sheet update logic by handling deletions,
    dynamically checking range,
    deleting old entries
@@ -22,13 +23,15 @@ TODO:
  - Improve Security a touch, maybe add links to .env
  - Implement MC Server Commands (Rollback? Reset? etc)
  - Implement periodic gif posting
- - Improve code style, extrapolate all check strings to .txts
+ - Prevent users from sending some basic commands in #general. 
+   e.g. delete request, post an explanation redirecting them, delete
+   explanation after enough time (callback function)
 
 
 Long Term:
  - Music bot?
  - Reverse image search and contribute to random discussions in #general
-
+ - Improve gif and response messages by detecting time, weather holiday etc
 
 
 ### -- George Holden
