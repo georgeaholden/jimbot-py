@@ -19,7 +19,6 @@ from modules import filehandling, gifs, harassment, sheets, timercontroller, lin
 class Bot:
 
     def __init__(self, token, guild, version):
-        self.version = version
 
         # Discord Related setup
         self.token = token
@@ -33,8 +32,9 @@ class Bot:
         # Setup for modules I wrote
         self.strings_dict = {}
         self.GIF_PROMPT, self.HELP_TEXT = filehandling.read_commands()
-        filehandling.setup_strings_dict(self.strings_dict)
+        self.version = filehandling.read_config(self.strings_dict)
         self.t_controller = timercontroller.TimerController()
+        self.t_controller.add_timer('gifs', 3)
 
         # Setup for Google Sheets
         creds = sheets.get_creds()
@@ -93,7 +93,7 @@ class Bot:
             return
 
         if message.content.lower().startswith(self.GIF_PROMPT):
-            if (datetime.datetime.now() - self.timers['gif']) > datetime.timedelta(hours=3):
+            if self.t_controller.time_has_elapsed('gifs', hours=3):
                 await gifs.post_gif(message.channel, self.guild, self.strings_dict['GIFS_PHRASES'], self.strings_dict['GIFS'])
             else:
                 await gifs.reject_gif_request(message.channel, self.strings_dict['GIFS_UNREADY'])

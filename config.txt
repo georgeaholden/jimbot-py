@@ -1,3 +1,4 @@
+0.1.2
 # Locations of txts containing strings used in setup_strings_dict
 HELLO_RESPONSES-phrase_txts/hello_responses.txt
 GIFS-phrase_txts/gifs.txt

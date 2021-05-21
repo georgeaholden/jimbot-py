@@ -21,15 +21,16 @@ def read_commands():
     return gif_prompt, help_text
 
 
-def setup_strings_dict(dictionary):
+def read_config(dictionary):
     infile = open('config.txt')
     lines = infile.readlines()
-    for line in lines:
+    for line in lines[1:]:
         if line.startswith('#'):
             continue
         key, filename = line.strip().split('-')
         dictionary[key] = create_list(filename)
     infile.close()
+    return lines[0].strip()
 
 
 def get_contents(filename):
