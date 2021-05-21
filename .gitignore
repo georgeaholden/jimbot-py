@@ -8,7 +8,8 @@ venv
 credentials
 
 ## Text Files for random string input##
-txts
+phrase_txts
+config_txts
 
 ## Testing modules
 testing.py

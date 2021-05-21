@@ -1,25 +1,35 @@
 # jimBot
+### 0.1.1
 Source Code for jimBot, a Python based discord bot
 
-Simple desktop application, will eventually
-be deployed to Google Cloud Platform. (Probably on same VM as the MC Server)
+Simple desktop application, currently deployed to a virtual machine on the Google
+Cloud Platform.
 
 Current Functionality:
  - Reads user messages tagged with $ as commands (should eventually use new built in Discord /commands)
  - Links a few useful URLs when given appropriate prompts
  - Updates Blackmore's Google Request Sheet based on user input using Sheets API
- 
+ - Posts randomised gifs with a randomised phrase, given a cooldown timer.
+ - Supports thanking
+
 TODO:
- - Further improve on Sheet update logic by handling deletions, 
-   dynamically checking range, 
-   deleting old entries 
+ - Implement "bandwagoning", where the bot adds a reaction if enough people
+ react to a given message
+ - Further improve on Sheet update logic by handling deletions,
+   dynamically checking range,
+   deleting old entries
    and sending requests to OMDB API to verify input
  - Improve Security a touch, maybe add links to .env
- - Deploy on Google Cloud Platform - Done
  - Implement MC Server Commands (Rollback? Reset? etc)
- - Add $buge, tts cone time, link oscar gif
- - Implement periodic $buging on 420
+ - Implement periodic gif posting
+ - Improve code style, extrapolate all check strings to .txts
 
 
-### -- George Holden 
+Long Term:
+ - Music bot?
+ - Reverse image search and contribute to random discussions in #general
+
+
+
+### -- George Holden
 #### 18/5/2021

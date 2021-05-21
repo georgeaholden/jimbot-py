@@ -4,44 +4,41 @@ Slim Jim's Discord Bot
 Implements basic features discussed in the README
 Think about implementing commands module from discord.ext
 
-Last Edited: 18/5/2021
+Last Edited: 21/5/2021
 """
 # Discord and general imports
 import os
 import discord
 import datetime
-from discord.ext import commands
 from dotenv import load_dotenv
 
 # Imports for the modules I wrote
-import sheets
-from linkfinder import linkfinder
-import harassment
-import gifs
-import filehandling
+from modules import filehandling, gifs, harassment, sheets, timercontroller, linkfinder
 
 
 class Bot:
 
-    def __init__(self, token, guild):
+    def __init__(self, token, guild, version):
+        self.version = version
+
+        # Discord Related setup
         self.token = token
         self.guild = guild
         self.client = discord.Client()
-        self.response_dict = {}
-        self.GIF_PROMPT, self.HELP_TEXT = filehandling.read_commands()
-        filehandling.setup_responses(self.response_dict)
         self.client.event(self.on_ready)
         self.client.event(self.on_message)
+        self.client.event(self.on_raw_reaction_add)
+        self.general = None
 
+        # Setup for modules I wrote
+        self.strings_dict = {}
+        self.GIF_PROMPT, self.HELP_TEXT = filehandling.read_commands()
+        filehandling.setup_strings_dict(self.strings_dict)
+        self.t_controller = timercontroller.TimerController()
+
+        # Setup for Google Sheets
         creds = sheets.get_creds()
         self.sheet = sheets.connect_to_sheet(creds)
-        self.timers = self.setup_timers()
-
-
-    def setup_timers(self):
-        result = {}
-        result['gif'] = datetime.datetime.now() - datetime.timedelta(hours=3)
-        return result
 
     # On Startup Basically
     async def on_ready(self):
@@ -55,9 +52,12 @@ class Bot:
         if not found:
             raise ValueError
         print('Connected to {}(id: {})\n'.format(guild.name, guild.id))
+        print(self.guild.name)
+        self.general = self.guild.get_channel(int(os.getenv('GENERAL')))
+        if not sheets.changelog_printed(self.sheet, self.version):
+            await self.post_changelog()
 
     # All Currently Available Commands (rly not a good way of handling it)
-    # Case sensitive
     async def on_message(self, message):
         if message.author == self.client.user:  # Prevents the bot from responding to itself (prob no longer useful)
             return
@@ -78,12 +78,12 @@ class Bot:
             return
 
         if message.content.lower().startswith('$link'):
-            link = linkfinder(message.content.lstrip('$flix '))
+            link = linkfinder.find_link(message.content.lstrip('$flix '))
             await message.channel.send(link)
             return
 
         if message.content.lower().startswith('$source'):
-            link = linkfinder('source')
+            link = linkfinder.find_link('source')
             await message.channel.send(link)
             return
 
@@ -94,31 +94,46 @@ class Bot:
 
         if message.content.lower().startswith(self.GIF_PROMPT):
             if (datetime.datetime.now() - self.timers['gif']) > datetime.timedelta(hours=3):
-                await gifs.post_gif(message.channel, self.guild, self.response_dict['PHRASES'], self.response_dict['GIFS'])
+                await gifs.post_gif(message.channel, self.guild, self.strings_dict['GIFS_PHRASES'], self.strings_dict['GIFS'])
             else:
-                await gifs.reject_gif_request(message.channel, self.response_dict['GIFS_UNREADY'])
+                await gifs.reject_gif_request(message.channel, self.strings_dict['GIFS_UNREADY'])
             return
 
         if message.content.lower().startswith('$'):
-            await message.channel.send('Is that meant to be a command??\nMaybe check $help')
-            return
+            if not message.content[1].isnumeric():
+                await message.channel.send('Is that meant to be a command??\nMaybe check $help')
+                return
 
-        for thank in ['ty', 'thank', 'arigatou', 'gracias', 'cheers', 'chur', 'merci', 'onya', 'grazie', 'ta', 'shot']:
-            if thank in message.content.lower():
-                for botname in ['bot', 'jim']:
-                    if botname in message.content.lower():
+        for botname in ['bot', 'jim']:
+            if botname in message.content.lower():
+                for thank in self.strings_dict['THANKS']:
+                    if thank in message.content.lower():
                         await message.channel.last_message.add_reaction('❤️')
                         await message.channel.send("You're welcome bud")
                         return
-
         # if message.content for new commands
+
+    async def on_raw_reaction_add(self, payload):
+        channel = self.guild.get_channel(payload.channel_id)
+        message = await channel.fetch_message(payload.message_id)
+
+        for reaction in message.reactions:
+            if reaction == payload.emoji:
+                break
+
+        if reaction.count > 2:
+            await message.add_reaction(reaction)
+
+    async def post_changelog(self):
+        await self.general.send(filehandling.get_contents('changelog.txt'))
 
 
 def main():
     load_dotenv()
     token = os.getenv('DISCORD_TOKEN')
     guild = os.getenv('DISCORD_GUILD')
-    bot = Bot(token, guild)
+    version = os.getenv('VERSION')
+    bot = Bot(token, guild, version)
     bot.client.run(token)
 
 

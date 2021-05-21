@@ -1,4 +1,6 @@
-HELLO_RESPONSES-txts/responses.txt
-GIFS-txts/gifs.txt
-GIFS_UNREADY-txts/unready.txt
-PHRASES-txts/phrases.txt
+# Locations of txts containing strings used in setup_strings_dict
+HELLO_RESPONSES-phrase_txts/hello_responses.txt
+GIFS-phrase_txts/gifs.txt
+GIFS_UNREADY-phrase_txts/gifs_unready.txt
+GIFS_PHRASES-phrase_txts/gifs_phrases.txt
+THANKS-phrase_txts/thanks.txt

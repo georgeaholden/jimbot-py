@@ -26,7 +26,7 @@ def setup_hello(filename):
 
 
 async def harass_user(user):
-    """Spams a user with threatening dms, defined as the lines after n in responses.txt
+    """Spams a user with threatening dms, defined as the lines after n in hello_responses.txt
     Currently just spams all in a row, but should eventually space them out"""
     for response in RESPONSES[n+1:]:
         await user.send(response)
@@ -45,4 +45,4 @@ async def say_hello(message):
         await message.channel.send(RESPONSES[n])
 
 
-setup_hello('txts/responses.txt')
+setup_hello('phrase_txts/hello_responses.txt')

@@ -1,0 +1,6 @@
+I'm now running version 0.1.1!
+What's new in this update:
+ - Some of my messages now use /tts
+     (Make sure you turn this on in settings under accessibility)
+ - Bandwagoning
+ - More ways to say thank you
