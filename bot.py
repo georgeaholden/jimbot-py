@@ -99,6 +99,7 @@ class Bot:
         if message.content.lower().startswith(self.GIF_PROMPT):
             if self.t_controller.time_has_elapsed('gifs', hours=3):
                 await gifs.post_gif(message.channel, self.guild, self.strings_dict['GIFS_PHRASES'], self.strings_dict['GIFS'])
+                self.t_controller.reset_timer('gifs')
             else:
                 await gifs.reject_gif_request(message.channel, self.strings_dict['GIFS_UNREADY'])
             return
