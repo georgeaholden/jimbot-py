@@ -62,6 +62,10 @@ class Bot:
         if message.author == self.client.user:  # Prevents the bot from responding to itself (prob no longer useful)
             return
 
+        if message.author.name == 'Jog' and message.content.lower().startswith('$kill'):
+            await message.channel.send('I don\'t feel so good :(')
+            await self.client.close()
+
         if message.content.lower().startswith('$hello'):
             await harassment.say_hello(message)
             return
@@ -138,3 +142,4 @@ def main():
 
 
 main()
+print('done')
