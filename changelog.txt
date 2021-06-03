@@ -1,2 +1,4 @@
-I'm now running version 0.1.2!
-This was a hotfix to correct a bug with timers
+I return a new man, now running v0.1.4!
+ - Bugs obliterated
+ - Timers timing
+ - Improved $link

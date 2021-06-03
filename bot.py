@@ -10,9 +10,11 @@ Last Edited: 21/5/2021
 import os
 import discord
 from dotenv import load_dotenv
+import datetime
 
 # Imports for the modules I wrote
 from modules import filehandling, gifs, harassment, sheets, timercontroller, linkfinder
+import asyncio
 
 
 class Bot:
@@ -34,11 +36,17 @@ class Bot:
         self.GIF_PROMPT, self.HELP_TEXT = filehandling.read_commands()
         self.version = filehandling.read_config(self.strings_dict)
         self.t_controller = timercontroller.TimerController()
-        self.t_controller.add_timer('gifs', 3)
+        self.t_controller.add_timer('gifs', hours=3)
 
         # Setup for Google Sheets
         creds = sheets.get_creds()
         self.sheet = sheets.connect_to_sheet(creds)
+        self.timeout_test = True
+
+    async def timeout(self):
+        await asyncio.sleep(20)
+        self.timeout_test = True
+        print('okay')
 
     # On Connection to the Discord server
     async def on_ready(self):
@@ -51,7 +59,7 @@ class Bot:
                 break
         if not found:
             raise RuntimeError
-        print('Connected to {}(id: {})\n'.format(guild.name, guild.id))
+        print('Connected to {}(id: {})\n'.format(self.guild.name, self.guild.id))
         print(self.guild.name)
         self.general = self.guild.get_channel(int(os.getenv('GENERAL')))
         if not sheets.changelog_printed(self.sheet, self.version):
@@ -62,9 +70,11 @@ class Bot:
         if message.author == self.client.user:  # Prevents the bot from responding to itself (prob no longer useful)
             return
 
+        # Global Commands
         if message.author.name == 'Jog' and message.content.lower().startswith('$kill'):
             await message.channel.send('I don\'t feel so good :(')
             await self.client.close()
+            return
 
         if message.content.lower().startswith('$hello'):
             await harassment.say_hello(message)
@@ -78,11 +88,16 @@ class Bot:
             return
 
         if message.content.lower().startswith('$help'):
+            if 'dm' in message.content.lower():
+                if isinstance(message.channel, discord.channel.DMChannel):
+                    await message.channel.send('dm channels are a safe space for you and me to talk privately'
+                                               + '\nThe requests you make in a dm channel are NOT logged, unless they directly trigger an action which')
+
             await message.channel.send(self.HELP_TEXT)
             return
 
         if message.content.lower().startswith('$link'):
-            link = linkfinder.find_link(message.content.lstrip('$flix '))
+            link = linkfinder.find_link(message.content.lstrip('$link '))
             await message.channel.send(link)
             return
 
@@ -96,13 +111,27 @@ class Bot:
                 "I can't really tell, but the MC Server should be up and working\nIf not please dm Jog")
             return
 
+        # #general only
         if message.content.lower().startswith(self.GIF_PROMPT):
+            if not isinstance(message.channel, discord.channel.TextChannel):
+                await message.channel.send('Cmon man surely in a group channel')
+                return
             if self.t_controller.time_has_elapsed('gifs', hours=3):
-                await gifs.post_gif(message.channel, self.guild, self.strings_dict['GIFS_PHRASES'], self.strings_dict['GIFS'])
                 self.t_controller.reset_timer('gifs')
+                await gifs.post_gif(message.channel, self.guild, self.strings_dict['GIFS_PHRASES'],
+                                    self.strings_dict['GIFS'])
             else:
                 await gifs.reject_gif_request(message.channel, self.strings_dict['GIFS_UNREADY'])
             return
+
+        if message.content.lower().startswith('$req'):
+            if not isinstance(message.channel, discord.channel.DMChannel):
+                await message.channel.send('Send me reqs in dms instead')
+                return
+            if 'wiki' in message.content.lower():
+                await message.channel.send('Sure, I can add you to the Wiki\nWhat\'s your email address?')
+
+
 
         if message.content.lower().startswith('$'):
             if not message.content[1].isnumeric():
@@ -127,7 +156,7 @@ class Bot:
             if reaction == payload.emoji:
                 break
 
-        if reaction.count > 2:  # Should be set in config or something
+        if reaction.count > 1:  # Should be set in config or something
             await message.add_reaction(reaction)
 
     async def post_changelog(self):
