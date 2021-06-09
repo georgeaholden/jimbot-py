@@ -7,19 +7,10 @@ SHOP = ['shop', 'store', 'things']
 MC = ['mine', 'craft', 'mc']
 CODE = ['source', 'code', 'git']
 
-HELP = """I currently know about:
-slimjimsthings.com
-The Slim Jim Wiki
-The Game & Movie sheets
-The MC Server IP Address
-My Source Code"""
-
 
 def find_link(query):
     """Finds and returns str links based on str query"""
     query = query.strip().lower()
-    if 'help' in query:
-        return HELP
     for phrase in SHOP:
         if phrase in query:
             return "https://slimjimsthings.com/"

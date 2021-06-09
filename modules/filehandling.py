@@ -26,26 +26,23 @@ def read_commands():
     return gif_prompt, help_text
 
 
-def read_config(dictionary):
-    """Extracts data from config.txt. Currently updates the given dictionary in place, and returns a string containing
-    the version number, which is super gross. Eventually version should be stored elsewhere"""
-    infile = open('config.txt')
-    lines = infile.readlines()
-    for line in lines[1:]:
-        if line.startswith('#'):
-            continue
-        key, filename = line.strip().split('-')
-        dictionary[key] = create_list(filename)
-    infile.close()
-    return lines[0].strip()
-
-
 def get_contents(filename):
     """Returns the entire contents of a given file as a string, with trailing whitespace removed"""
     infile = open(filename)
     result = infile.read()
     infile.close()
     return result.strip()
+
+
+def get_contents_as_list(filename):
+    """Returns the contents of a given file as a list of lines, with trailing whitespace removed"""
+    infile = open(filename)
+    lines = infile.readlines()
+    result = []
+    for line in lines:
+        result.append(line.strip())
+    infile.close()
+    return result
 
 
 if __name__ == '__main__':
