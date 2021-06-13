@@ -1,5 +1,5 @@
 import datetime
-
+import time
 
 class TimerController:
     """Class to handle a dictionary of different timers and implement methods for resetting and checking them"""
@@ -30,5 +30,14 @@ if __name__ == '__main__':
     """Test code"""
     timer_controller = TimerController()
     timer_controller.add_timer('test', hours=3)
-    print(timer_controller.time_has_elapsed('test', hours=4))
+    print(timer_controller.time_has_elapsed('test', hours=3))
+    timer_controller.add_timer('test2')
+    print(timer_controller.time_has_elapsed('test2', minutes=1))
+    time.sleep(2)
+    print(timer_controller.time_has_elapsed('test2', seconds=1))
+    timer_controller.reset_timer('test2')
+    print(timer_controller.time_has_elapsed('test2', seconds=1))
+    time.sleep(2)
+    print(timer_controller.time_has_elapsed('test2', seconds=1))
+
 

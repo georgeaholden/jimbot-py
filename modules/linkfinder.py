@@ -7,29 +7,22 @@ SHOP = ['shop', 'store', 'things']
 MC = ['mine', 'craft', 'mc']
 CODE = ['source', 'code', 'git']
 
-HELP = """I currently know about:
-slimjimsthings.com
-The jims movie sheet
-The jimDev Doc
-The jims game sheet
-The MC Server IP Address
-My Source Code"""
-
 
 def find_link(query):
     """Finds and returns str links based on str query"""
     query = query.strip().lower()
-    if 'help' in query:
-        return HELP
     for phrase in SHOP:
         if phrase in query:
             return "https://slimjimsthings.com/"
     if 'movie' in query:
         return "https://docs.google.com/document/d/1fKXEQ2yVU_y_A9jowsXQH0r8pQ4zREiu-Rj7hRCqNQw/edit?usp=sharing"
     if 'dev' in query:
-        return "https://docs.google.com/document/d/1d-6VmkRiD2zlFNqHNVP43PP9EQ9KVP8zwdfOeTiN4Lo/edit?usp=sharing"
+        return "The Dev doc is deprecated and will be removed in an update soon\nPlease use $link wiki"
     if 'game' in query:
         return "https://docs.google.com/spreadsheets/d/12ILuG2T99PL1-gjGyGUCf1GMb7N-uvG66wf5OGYv4mM/edit?usp=sharing"
+    if 'wiki' in query:
+        return "https://slimwiki.com/slim-jim-s" \
+               + "\nThe Slim Jim's Wiki requires that you be explicitly added in order to view, dm me $req wiki to join"
     for phrase in MC:
         if phrase in query:
             return 'The Current MC Server is Running on a NEW IP Address: 34.151.89.121'

@@ -5,6 +5,8 @@ import random
 async def post_gif(channel, guild, responses, gifs, ):
     """Takes a channel and posts a random response and gif. Reacts to the response with a hardcoded emoji.
     Eventually should be refactored to accept an emoji instead of guild"""
+    print(type(gifs))
+    print(responses)
     await channel.send(responses[random.randint(0, len(responses) - 1)], tts=True)
     await channel.send(gifs[random.randint(0, len(gifs) - 1)])
     await channel.last_message.add_reaction(await guild.fetch_emoji(831103522229190656))
