@@ -1,4 +1,4 @@
-I return a new man, now running v0.1.4!
+I return a new man, now running v0.1.5!
  - Bugs obliterated
  - Timers timing
  - Improved $link

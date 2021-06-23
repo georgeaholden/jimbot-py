@@ -4,16 +4,15 @@ Slim Jim's Discord Bot
 Implements basic features discussed in the README
 Think about implementing commands module from discord.ext
 
-Last Edited: 6/9/2021
+Last Edited: 13/06/2021
 """
 # Discord and general imports
 import asyncio
 import os
 import re
 
-EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
-import async_timeout
 import discord
+EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
 
 HELP = """I currently know about:
 slimjimsthings.com

@@ -1,5 +1,5 @@
 # jimBot
-### 0.1.2
+### 0.1.5
 Source Code for jimBot, a Python based discord bot
 
 Simple desktop application, currently deployed to a virtual machine on the Google
