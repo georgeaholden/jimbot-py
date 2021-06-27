@@ -45,17 +45,19 @@ class Bot:
         self.client.event(self.on_message)
         self.client.event(self.on_raw_reaction_add)
 
+        # Setup for Google Sheets
+        self.sheet_handler = sheets.SheetHandler()
+
         # Setup for modules I wrote
-        self.GIF_PROMPT, self.HELP_TEXT = filehandling.read_commands()
+        self.GIF_PROMPT = self.sheet_handler.get_value('DB', 'gif_prompt')
+        self.HELP_TEXT = self.sheet_handler.get_value('DB', 'help_text')
         self.strings_dict = dict(config['STRINGS'])
         for key, filename in self.strings_dict.items():
             self.strings_dict[key] = filehandling.get_contents_as_list(filename)
         self.t_controller = timercontroller.TimerController()
         self.t_controller.add_timer('gifs', hours=3)
 
-        # Setup for Google Sheets
-        creds = sheets.get_creds()
-        self.sheet = sheets.connect_to_sheet(creds)
+
 
     # On Connection to the Discord server
     async def on_ready(self):

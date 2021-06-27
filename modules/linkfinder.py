@@ -25,7 +25,7 @@ def find_link(query):
                + "\nThe Slim Jim's Wiki requires that you be explicitly added in order to view, dm me $req wiki to join"
     for phrase in MC:
         if phrase in query:
-            return 'The Current MC Server is Running on a NEW IP Address: 34.151.89.121'
+            return 'The Current MC Server has just been updated to v'
     for phrase in CODE:
         if phrase in query:
             return 'My Source Code is publicly available at: https://github.com/georgeaholden/jimBot'

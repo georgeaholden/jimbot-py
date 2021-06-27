@@ -71,12 +71,33 @@ class SheetHandler:
         return True
 
     def changelog_printed(self, sheet, version):
-        printed = get_cell(sheet, DB_SHEET + 'B2')
+        printed = self.get_cell(sheet, DB_SHEET + 'B2')
         if printed == version:
             return True
         else:
-            update_cell(sheet, DB_SHEET + 'B2', version)
+            self.update_cell(sheet, DB_SHEET + 'B2', version)
             return False
+
+    def get_value(self, sheet_name, identifier):
+        """Finds the value of the associated identifier in the db"""
+        if identifier.startswith('gif'):
+            prefix = 'gifs'
+        else:
+            prefix = 'misc'
+        num_cols = int(self.get_cell(sheet_name, prefix + '!A1'))
+        start, end = translate_alpha_range(1, num_cols)
+        selection = "{}!{}1:{}2".format(prefix, start, end)
+        values = self.get_range(sheet_name, selection)
+        try:
+            index = values[0].index(identifier)
+        except ValueError:
+            raise ValueError("Column with specified identifier not found in Database")
+        else:
+            return values[1][index]
+
+
+
+
 
 
 def get_creds():
@@ -112,6 +133,20 @@ def connect_to_service():
     return sheet_service
 
 
+def translate_alpha_range(i, j):
+    """Takes a range of values expressed as two integers i and j, and returns the range expressed as a string of
+    bijective base-26 numbers char:char. E.g. 0:1 maps to A:B, 26:27 maps to Z:AA"""
+    return translate_alpha_char(i), translate_alpha_char(j)
+
+def translate_alpha_char(num):
+    """Takes a single integer and returns its representation in bijective base-26. Limited at 2 digits because recursive
+    functions are hard and google sheets prevents ridiculously large sheets.
+    https://en.wikipedia.org/wiki/Bijective_numeration#The_bijective_base-26_system"""
+    if num > 26 * 2:
+        raise ValueError
+    if num <= 26:
+        return chr(num + 65)
+    return chr(num // 26 + 64) + chr(num % 26 + 65)
 
 
 
